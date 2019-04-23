@@ -1,0 +1,23 @@
+- name: setup autorest (root tasks)
+  hosts: all
+  become: yes
+  tasks:
+    - name: install dotnet repo package
+      package:
+        name: centos-release-dotnet
+    - name: install required rpms
+      package:
+        name:
+          - rh-dotnet22-dotnet-sdk-2.2
+          - rh-nodejs8-npm
+- name: setup autorest (nonroot)
+  hosts: all
+  tasks:
+    - name: install npm module
+      shell: |
+        . /opt/rh/rh-nodejs8/enable
+        . /opt/rh/rh-dotnet22/enable
+        npm install autorest
+      register: output
+    - name: show the output
+      debug: var=output
